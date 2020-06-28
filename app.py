@@ -24,7 +24,7 @@ def add_entity(StoreName, ID, ZipCode, MaxCapacity, Address, CurrentOccupancy, D
     table_service.insert_entity('StoreOccupancy', row)
 
 def get_entity(StoreNameInput, AddressInput):
-    listEntities = query_entities('StoreOccupancy', filter = StoreName eq StoreNameInput and Address eq AddressInput , accept = 'application/json')
+    listEntities = table_service.query_entities('StoreOccupancy', filter = "StoreName eq StoreNameInput and Address eq AddressInput" , accept = 'application/json')
     maxId = 0
     maxEntity = null
     for entity in listEntities: 
@@ -33,5 +33,3 @@ def get_entity(StoreNameInput, AddressInput):
             maxEntity = entity
     
     return maxEntity
-
-    
