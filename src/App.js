@@ -108,3 +108,4 @@ class Shopper extends React.Component{
     )
   };
 }
+
