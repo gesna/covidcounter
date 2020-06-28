@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from azure.cosmosdb.table.tableservice import TableService
 from azure.cosmosdb.table.models import Entity
 from datetime import datetime
