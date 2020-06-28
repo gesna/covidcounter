@@ -2,9 +2,12 @@ from flask import Flask, request
 from azure.cosmosdb.table.tableservice import TableService
 from azure.cosmosdb.table.models import Entity
 from datetime import datetime
+from flask_cors import CORS, cross_origin
+
 
 app = Flask(__name__)
 table_service = TableService(account_name='covidcountstorage', account_key='NE7xyUWKIFiRnUowiB3VPwlT6O5bJn1qxhQtSnUvHtubqnd8MbOFdnMLY385DXAPkc32SkxwWf+Kx++D9mjykQ==')
+CORS(app)
 
 @app.route('/')
 def homepage():
@@ -21,7 +24,9 @@ def store():
 # /createStore?storename=CVS
 # /createStore?storename=Chilis
 @app.route('/createStore')
+@cross_origin(origin='*')
 def createStore():
+    print(request)
     storename = request.args['storename']
     if table_service.create_table(storename):
         return 'Successfully created new table for {}'.format(storename)
@@ -50,6 +55,7 @@ def removeStore():
 # /addEntry?storename=Walmart&address=420MicrosoftBlvdRedmondWA&maxcapacity=467&action=inc&value=26&zipcode=98008&ip=192168014
 @app.route('/addEntry')
 def addEntry():
+    print(request)
     StoreName = request.args['storename']
     Address = request.args['address']
     MaxCapacity = request.args.get('maxcapacity') #optional if not first time
@@ -67,6 +73,7 @@ def addEntry():
 # /getCurrentOccupancy?storename=Walmart&address=503SesameStNoviMI
 # /getCurrentOccupancy?storename=Walmart&address=420MicrosoftBlvdRedmondWA
 @app.route('/getCurrentOccupancy')
+@cross_origin(origin='*')
 def getCurrentOccupancy():
     StoreName = request.args['storename']
     Address = request.args['address']
@@ -74,8 +81,9 @@ def getCurrentOccupancy():
     if entity is None:
         return '<h1>No data available for {} at {}.<h1>'.format(StoreName, Address)
     else:
-        return '''<h1>The current occupancy of {} at {} is {} people.<h1>
-                  <h1>The maximum capacity is {} people.<h1>'''.format(StoreName, Address, entity.CurrentOccupancy, entity.MaxCapacity)
+        return entity.CurrentOccupancy
+        # return '''<h1>The current occupancy of {} at {} is {} people.<h1>
+        #           <h1>The maximum capacity is {} people.<h1>'''.format(StoreName, Address, entity.CurrentOccupancy, entity.MaxCapacity)
 
 
 # add a row to the table for the given store
