@@ -1,8 +1,11 @@
 import React from 'react';
 import { PrimaryButton, TextField } from '@fluentui/react'
+import { List } from 'office-ui-fabric-react/lib/List';
 import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
 import { VictoryChart, VictoryTheme, VictoryArea } from "victory";
 import './App.css';
+import moment from 'moment';
+import { useTable } from 'react-table';
 const axios = require('axios');
 
 
@@ -263,15 +266,67 @@ class Store extends React.Component {
   };
 }
 
-class Shopper extends React.Component {
-  render() {
-    return (
-      <div>
-        <br />
+class Shopper extends React.Component{
+
+  constructor(props){
+    super(props);
+    const time = moment().format('LTS');
+
+    this.state = {
+      maxCapacity: 0,
+      currentOccupancy:50,
+      videoSource: '',
+      storeData: {
+        'Walmart': Math.floor(50 + Math.random()*30),
+        'Trader Joe\'s': Math.floor(50 + Math.random()*30),
+        'Whole Foods': Math.floor(50 + Math.random()*30),
+        'PetCo': Math.floor(50 + Math.random()*30)
+      }
+    };
+  }
+
+  mockdata(){
+    var newStoreData = this.state.storeData;
+    for (const store in newStoreData){
+      newStoreData[store] = newStoreData[store] + Math.floor(Math.random() * 8 - 4);
+    }
+    this.setState({storeData: newStoreData}); 
+  }
+
+
+  componentDidMount() {
+    setInterval(()=>this.mockdata(), 3000);
+  }
+
+  render(){
+    return(
+      <React.Fragment>
         <Link to="/"><PrimaryButton onClick={() => this.props.gotolanding()}>CovidCounter Home</PrimaryButton></Link>
         <h1> Shopper View</h1>
-      </div>
-    )
+        <table>
+          <tr> 
+            <th>Store</th>
+            <th>Occupancy</th>
+          </tr>
+          <tr>
+            <td>Walmart</td>
+            <td>{this.state.storeData['Walmart']}</td>
+          </tr>
+          <tr>
+            <td>Trader Joe's</td>
+            <td>{this.state.storeData['Trader Joe\'s']}</td>
+          </tr>
+          <tr>
+            <td>Whole Foods</td>
+            <td>{this.state.storeData['Whole Foods']}</td>
+          </tr>
+          <tr>
+            <td>PetCo</td>
+            <td>{this.state.storeData['PetCo']}</td>
+          </tr>
+        </table>
+      </React.Fragment>
+    );
   };
 }
 
