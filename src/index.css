@@ -12,3 +12,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(87, 63, 223);
+  color: white;
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table td{
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table{
+  width: 50%;
+  margin: auto;
+}
