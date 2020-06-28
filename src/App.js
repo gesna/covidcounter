@@ -1,6 +1,7 @@
 import React from 'react';
 import { PrimaryButton, TextField } from '@fluentui/react'
 import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
+import { VictoryChart, VictoryTheme, VictoryArea } from "victory";
 import './App.css';
 
 export default class App extends React.Component {
@@ -16,14 +17,14 @@ export default class App extends React.Component {
         <BrowserRouter> 
           <Link to="/store"><PrimaryButton>Store</PrimaryButton></Link>
           <Link to='/shopper'><PrimaryButton>Shopper</PrimaryButton></Link>
-          {/* <Switch>
+          <Switch>
             <Route exact path="/store">
               <Store/>
             </Route>
-            <Route exact path="shopper">
+            <Route exact path="/shopper">
               <Shopper/>
             </Route>
-          </Switch> */}
+          </Switch>
         </BrowserRouter>
       </div>
     );
@@ -38,25 +39,33 @@ class Store extends React.Component{
       maxCapacity: 0,
       currentOccupancy:0,
       videoSource: '',
+      pastOccupancy: {
+        '2PM': 43,
+        '3PM': 56,
+        '4PM': 48,
+        '5PM': 52,
+        '6PM': 78,
+        '7PM': 81,
+      }
     };
   }
 
 
-  componentDidMount(){
-    fetch("/stream")
-    .then(res => res.json())
-    .then((data) =>{
-      this.setState({maxCapacity: data.maxCapacity, currentOccupancy: data.currentOccupancy})
-    })
-    .catch(this.setState({maxCapacity: 100, currentOccupancy: 83}))
-  };
+  // componentDidMount(){
+  //   fetch("/stream")
+  //   .then(res => res.json())
+  //   .then((data) =>{
+  //     this.setState({maxCapacity: data.maxCapacity, currentOccupancy: data.currentOccupancy})
+  //   })
+  //   .catch(this.setState({maxCapacity: 100, currentOccupancy: 83}))
+  // };
 
   validate(ip){
     return true;
   };
 
   updateVideoSource(ip){
-    if (validate(ip)){
+    if (this.validate(ip)){
       this.setState({videoSource: ip});
     }
   };
@@ -67,14 +76,19 @@ class Store extends React.Component{
         <h1> CovidCounter</h1>
         <span>
           <p> Camera IP: </p> 
-          <TextField placeholder="eg. 127.0.0.1:4000" onChange={updateVideoSource(this.value)}/>
+          {/* <TextField placeholder="eg. 127.0.0.1:4000" onChange={this.updateVideoSource(this.value)}/> */}
         </span>
 
         <div id='live-view'>
 
         </div>
-        <div id='occupancy-chart'>
 
+        <div id='occupancy-chart'>
+          <VictoryChart theme={VictoryTheme.Material}>
+            <VictoryArea
+              data={this.state.pastOccupancy}
+            />
+          </VictoryChart>
         </div>
 
         <span>
