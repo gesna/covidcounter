@@ -10,6 +10,11 @@ table_service = TableService(account_name='covidcountstorage', account_key='NE7x
 def homepage():
     return "Welcome to the COVID Capacity Counter!"
 
+@app.route('/store', methods=['GET', 'POST'])
+def store():
+    if request.method == 'POST':
+        return ''
+
 # parameters: storename (required)
 # sample usage:
 # /createStore?storename=Walmart
