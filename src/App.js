@@ -200,7 +200,16 @@ class Store extends React.Component {
 
   }
   updatedata() {
-    axios.get("http://localhost:5000/getCurrentOccupancy?storename=Walmart&address=420MicrosoftBlvdRedmondWA", {}).then(res => (res.data)).then(data => this.setState({ currentOccupancy: data })).catch(e => console.log(e))
+    axios.get("http://localhost:5000/getCurrentOccupancy?storename=Walmart&address=420MicrosoftBlvdRedmondWA", {})
+    .then(res => (res.data))
+    .then(data => this.setState({
+      currentOccupancy: data,
+      pastOccupancy: [
+        ...this.state.pastOccupancy,
+        { time: '8PM', people: data },
+      ]
+    }))
+    .catch(e => console.log(e))
 
   }
 
